@@ -1,0 +1,21 @@
+{
+  "name": "kenz-techfest-2026",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "gsap": "^3.12.5",
+    "html5-qrcode": "^2.3.8",
+    "qrcode": "^1.5.4",
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}
