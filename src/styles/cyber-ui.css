@@ -674,6 +674,8 @@
 
   .brand-sub-text {
     font-size: 0.62rem;
+    white-space: normal;
+    line-height: 1.2;
   }
 
   .nav-actions-block {
