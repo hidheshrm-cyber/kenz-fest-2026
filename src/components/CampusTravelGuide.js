@@ -4,8 +4,16 @@ export function renderCampusTravelGuide() {
   const inst = FEST_CONFIG.institution;
 
   return `
-    <section id="travel-guide" style="padding: 100px 0 80px; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 90%, rgba(0, 240, 255, 0.06) 0%, transparent 60%);">
+    <section id="travel-guide" class="cyber-section-ambient" style="padding: 130px 0 80px; min-height: 100vh; position: relative; overflow: hidden;">
       
+      <!-- Background Cyber Objects & Ambience -->
+      <div class="cyber-bg-grid-mesh"></div>
+      <div class="cyber-bg-orb cyber-bg-orb-cyan" style="width: 520px; height: 520px; top: 12%; left: -100px;"></div>
+      <div class="cyber-bg-orb cyber-bg-orb-pink" style="width: 460px; height: 460px; bottom: 10%; right: -90px;"></div>
+      <div class="cyber-floating-ring" style="width: 400px; height: 400px; top: 15%; right: 6%;"></div>
+      <div class="cyber-floating-diamond" style="bottom: 25%; left: 8%;"></div>
+      <div class="cyber-watermark" style="top: 15%; left: 50%; transform: translateX(-50%); opacity: 0.035;">LOCATION</div>
+
       <div class="container" style="position: relative; z-index: 2;">
         
         <!-- Section Header -->

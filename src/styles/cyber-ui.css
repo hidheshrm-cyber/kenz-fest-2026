@@ -800,4 +800,117 @@
   }
 }
 
+/* =========================================================
+   3. Ambient Page Backgrounds & Floating Cyber Objects
+========================================================= */
+.cyber-section-ambient {
+  position: relative;
+  overflow: hidden;
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(255, 42, 133, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(0, 240, 255, 0.10) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(123, 44, 191, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, #07050d 0%, #0d0818 50%, #07050d 100%);
+}
+
+.cyber-bg-grid-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 42, 133, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.2) 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.2) 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cyber-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  animation: pulseOrb 8s ease-in-out infinite alternate;
+}
+
+.cyber-bg-orb-pink {
+  background: radial-gradient(circle, rgba(255, 42, 133, 0.45) 0%, rgba(255, 42, 133, 0) 70%);
+}
+
+.cyber-bg-orb-cyan {
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.4) 0%, rgba(0, 240, 255, 0) 70%);
+  animation-delay: -4s;
+}
+
+.cyber-bg-orb-purple {
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.35) 0%, rgba(147, 51, 234, 0) 70%);
+  animation-delay: -2s;
+}
+
+@keyframes pulseOrb {
+  0% {
+    transform: scale(0.85) translate(0, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.15) translate(20px, -20px);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(0.95) translate(-15px, 15px);
+    opacity: 0.4;
+  }
+}
+
+.cyber-watermark {
+  position: absolute;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: clamp(4rem, 15vw, 12rem);
+  color: rgba(255, 255, 255, 0.02);
+  letter-spacing: 12px;
+  line-height: 0.9;
+  user-select: none;
+  pointer-events: none;
+  z-index: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cyber-floating-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 240, 255, 0.2);
+  pointer-events: none;
+  z-index: 1;
+  animation: rotateRing 30s linear infinite;
+}
+
+.cyber-floating-diamond {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border: 1px solid rgba(255, 42, 133, 0.15);
+  transform: rotate(45deg);
+  pointer-events: none;
+  z-index: 1;
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cyber-bg-circuit-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
 

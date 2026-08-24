@@ -8,7 +8,7 @@ import { renderNavbar } from './components/Navbar.js';
 import { renderHeroHUD } from './components/HeroHUD.js';
 import { renderPartnerBanner } from './components/PartnerBanner.js';
 import { initCountdown } from './components/CountdownTimer.js';
-import { renderEventsShowcase } from './components/EventsShowcase.js';
+import { renderEventsShowcase, initEventArenaCharacter } from './components/EventsShowcase.js';
 import { renderEventModal } from './components/EventModal.js';
 import { renderMascotInspector360 } from './components/MascotInspector360.js';
 import { renderCoordinatorsSection } from './components/CoordinatorsSection.js';
@@ -20,26 +20,20 @@ import { renderAdminScanner, initAdminScanner } from './components/AdminScanner.
 import { ScrollObserver } from './animations/ScrollObserver.js';
 import { initStoryAnimations } from './animations/StoryAnimations.js';
 
-let mascot3D = null;
+import { renderSponsorsSection } from './components/Sponsors.js';
+import { renderFAQSection } from './components/FAQ.js';
+
 let scrollObserver = null;
 
 function initApp() {
   const app = document.getElementById('app');
   if (!app) return;
 
+  // Render the static shell (Navbar + Footer + Modals)
   try {
-    // 1. Render Full HTML Application Skeleton
     app.innerHTML = `
       ${renderNavbar()}
-      <main>
-        ${renderHeroHUD()}
-        ${renderPartnerBanner()}
-        ${renderEventsShowcase()}
-        ${renderMascotInspector360()}
-        ${renderCoordinatorsSection()}
-        ${renderAboutInstitution()}
-        ${renderCampusTravelGuide()}
-      </main>
+      <main id="router-view"></main>
       ${renderCyberFooter()}
       ${renderEventModal()}
       ${renderRegistrationPortal()}
@@ -49,58 +43,69 @@ function initApp() {
     console.error('[KENZ-FEST] HTML Template Render Error:', renderErr);
   }
 
-  // 2. Initialize Three.js Background 3D Engine
-  try {
-    new SceneManager('bg-canvas');
-  } catch (threeErr) {
-    console.warn('[KENZ-FEST] ThreeJS Scene Background init skipped:', threeErr);
+  // Router Logic
+  function handleRoute() {
+    const view = document.getElementById('router-view');
+    if (!view) return;
+
+    const hash = window.location.hash || '#/';
+    window.scrollTo(0, 0); // Reset scroll on page change
+
+    let content = '';
+
+    if (hash === '#/') {
+      content = `
+        ${renderHeroHUD()}
+        ${renderPartnerBanner()}
+        ${renderEventsShowcase()}
+      `;
+    } else if (hash === '#/events') {
+      content = renderEventsShowcase();
+    } else if (hash === '#/about' || hash === '#/coordinators') {
+      content = renderCoordinatorsSection();
+    } else if (hash === '#/institution') {
+      content = renderAboutInstitution();
+    } else if (hash === '#/location') {
+      content = renderCampusTravelGuide();
+    } else if (hash === '#/sponsors') {
+      content = renderSponsorsSection();
+    } else if (hash === '#/faq') {
+      content = renderFAQSection();
+    } else {
+      content = renderHeroHUD(); // Fallback
+    }
+
+    view.innerHTML = content;
+
+    // Re-initialize dynamic scripts for the newly injected DOM
+    try { initCountdown(); } catch (e) {}
+    try { setupVideoPlaybackController(); } catch (e) {}
+    try { setupEventFiltering(); } catch (e) {}
+    try { setupEventModals(); } catch (e) {}
+    try { initEventArenaCharacter(); } catch (e) {}
+    
+    if (scrollObserver) {
+      scrollObserver.refresh();
+    } else {
+      try { scrollObserver = new ScrollObserver(); } catch (e) {}
+    }
+    
+    // Trigger scroll event to update navbar visibility based on the new route
+    window.dispatchEvent(new Event('scroll'));
   }
 
-  // 3. Initialize Three.js 3D Mascot Inspector
-  try {
-    mascot3D = new Mascot3DViewer('three-mascot-container');
-  } catch (mascotErr) {
-    console.warn('[KENZ-FEST] 3D Mascot Viewer init skipped:', mascotErr);
-  }
-
-  // 4. Initialize Live Countdown Clock
-  try {
-    initCountdown();
-  } catch (e) {
-    console.warn('[KENZ-FEST] Countdown init:', e);
-  }
-
-  // 5. Initialize Smooth Cyber Pop-Up Scroll Animations
-  try {
-    scrollObserver = new ScrollObserver();
-  } catch (e) {
-    console.warn('[KENZ-FEST] Scroll observer init:', e);
-  }
-
-  // 6. Initialize Registration Portal & Database Handlers
-  try {
-    initRegistrationPortal();
-  } catch (e) {
-    console.warn('[KENZ-FEST] Registration portal init:', e);
-  }
-
-  // 7. Initialize Admin Camera QR Scanner Dashboard
-  try {
-    initAdminScanner();
-  } catch (e) {
-    console.warn('[KENZ-FEST] Admin scanner init:', e);
-  }
-
-  // 8. Setup Interactive Event Listeners & Audio Triggers
-  try { setupVideoPlaybackController(); } catch (e) {}
-  try { setupAudioListeners(); } catch (e) {}
-  try { setupNavbarInteractions(); } catch (e) {}
-  try { setupEventFiltering(); } catch (e) {}
-  try { setupEventModals(); } catch (e) {}
-  try { setupMascot3DControls(); } catch (e) {}
+  window.addEventListener('hashchange', handleRoute);
   
-  // 9. Initialize Story Scroll Animations
-  try { initStoryAnimations(); } catch (e) { console.warn('[KENZ-FEST] Story Animations init skipped:', e); }
+  // Initial Route Render
+  handleRoute();
+
+  // Initialize Global Elements (Three.js Background, Modals, Navbar)
+  try { new SceneManager('bg-canvas'); } catch (e) {}
+  try { initRegistrationPortal(); } catch (e) {}
+  try { initAdminScanner(); } catch (e) {}
+  try { setupNavbarInteractions(); } catch (e) {}
+  
+  // NOTE: Story animations disabled because they require a continuous SPA scroll structure
 }
 
 // 1. Video Playback & Performance Controller
@@ -111,11 +116,15 @@ function setupVideoPlaybackController() {
   video.muted = true;
   video.defaultMuted = true;
   video.playsInline = true;
+  video.loop = true;
 
   // Smooth playback trigger
   const startPlayback = () => {
     if (video.paused) {
-      video.play().catch(() => {});
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
     }
   };
 
@@ -125,16 +134,6 @@ function setupVideoPlaybackController() {
   document.addEventListener('pointerdown', startPlayback, { once: true });
   document.addEventListener('touchstart', startPlayback, { once: true, passive: true });
   document.addEventListener('scroll', startPlayback, { once: true, passive: true });
-
-  // Seamless loop recovery with zero freezing
-  video.addEventListener('ended', () => {
-    video.currentTime = 0;
-    startPlayback();
-  });
-
-  video.addEventListener('stalled', () => {
-    startPlayback();
-  });
 
   // Pause video when scrolled out of view to save GPU power, resume when in view
   if ('IntersectionObserver' in window) {
@@ -198,20 +197,10 @@ function setupNavbarInteractions() {
       }
     });
 
-    // Mobile nav links with smooth scrolling and navbar offset compensation
+    // Mobile nav links (Just close menu on click)
     mobileMenu.querySelectorAll('.mobile-nav-link').forEach(link => {
-      link.addEventListener('click', (e) => {
-        const href = link.getAttribute('href');
+      link.addEventListener('click', () => {
         closeMobileMenu();
-        if (href && href.startsWith('#')) {
-          e.preventDefault();
-          const target = document.querySelector(href);
-          if (target) {
-            const navHeight = 70;
-            const topPos = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
-            window.scrollTo({ top: topPos, behavior: 'smooth' });
-          }
-        }
       });
     });
 
@@ -230,10 +219,17 @@ function setupNavbarInteractions() {
   const header = document.getElementById('main-header');
   function handleNavbarScroll() {
     if (!header) return;
-    if (window.scrollY > 40) {
-      header.classList.add('nav-visible');
+    const hash = window.location.hash || '#/';
+    if (hash === '#/') {
+      // Home page: hide at top
+      if (window.scrollY > 40) {
+        header.classList.add('nav-visible');
+      } else {
+        header.classList.remove('nav-visible');
+      }
     } else {
-      header.classList.remove('nav-visible');
+      // Other pages: always visible
+      header.classList.add('nav-visible');
     }
   }
 

@@ -30,7 +30,7 @@ export const FEST_CONFIG = {
     theme: "Futuristic 3D Cybernetic Ambassador",
     accentColor: "#ff2a85",
     secondaryColor: "#00f0ff",
-    videoBg: "/assets/pink_panther_10s_background.mp4",
+    videoBg: "/assets/intro_video_seamless.mp4",
     officialLogo: "/assets/kenz_fest_logo.png",
     emblemLogo: "/assets/kenz_fest_logo.png",
     heroImage: "/assets/mascot_cyberpunk_hero.jpg",

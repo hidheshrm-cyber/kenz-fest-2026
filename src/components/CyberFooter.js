@@ -38,14 +38,13 @@ export function renderCyberFooter() {
               NAVIGATION HUD
             </h4>
             <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--font-mono); font-size: 0.85rem;">
-              <a href="#hero" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 01. HOME PORTAL</a>
-              <a href="#events" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 02. COMPETITION TRACKS</a>
-              <a href="#mascot-3d" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 03. 3D MASCOT INSPECTOR</a>
-              <a href="#schedule" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 04. EVENT SCHEDULE & TIMELINE</a>
-              <a href="#coordinators" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 05. EVENT COORDINATORS</a>
-              <a href="#travel-guide" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 06. LOCATION & BUS ROUTES</a>
-              <a href="#about" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 07. HOST INSTITUTION</a>
-              <a href="#admin" style="color: var(--neon-pink); text-decoration: none; font-weight: 700; transition: color 0.2s;">> 08. ADMIN QR SCANNER</a>
+              <a href="#/" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 01. HOME PORTAL</a>
+              <a href="#/sponsors" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 02. SPONSORS</a>
+              <a href="#/about" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 03. ABOUT US & TEAM</a>
+              <a href="#/institution" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 04. HOST INSTITUTION</a>
+              <a href="#/location" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 05. LOCATION & BUS ROUTES</a>
+              <a href="#/faq" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 06. FAQ & SUPPORT</a>
+              <a href="#admin" style="color: var(--neon-pink); text-decoration: none; font-weight: 700; transition: color 0.2s;">> 07. ADMIN QR SCANNER</a>
             </div>
           </div>
 

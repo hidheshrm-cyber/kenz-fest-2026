@@ -7,7 +7,7 @@ export function renderHeroHUD() {
       
       <!-- Fullscreen 3D Video Layer (Edge to Edge 100% Viewport) -->
       <div style="position: absolute; inset: 0; z-index: 1; overflow: hidden;">
-        <video id="front-intro-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback style="width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform;">
+        <video id="front-intro-video" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback style="width: 100%; height: 100%; object-fit: cover; display: block; transform: translate3d(0, 0, 0); backface-visibility: hidden; will-change: transform;">
           <source src="${FEST_CONFIG.mascot.videoBg}" type="video/mp4">
         </video>
         <!-- Subtle Top & Bottom Gradient Shadows for Seamless Blending -->
@@ -56,11 +56,6 @@ export function renderHeroHUD() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 12 8"></polygon></svg>
                 <span>${FEST_CONFIG.institution.name}</span>
               </div>
-
-              <div class="cyber-badge" style="font-size: 0.7rem;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>AUTONOMOUS INSTITUTION</span>
-              </div>
             </div>
 
             <!-- Grand Title -->
@@ -105,12 +100,7 @@ export function renderHeroHUD() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           </a>
 
-          <a href="#mascot-3d" class="btn-cyber-cyan hero-btn-sub">
-            <span>INSPECT 3D MASCOT</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-          </a>
-
-          <a href="#events" class="btn-cyber-outline hero-btn-sub">
+          <a href="#/events" class="btn-cyber-outline hero-btn-sub">
             <span>VIEW EVENT TRACKS</span>
           </a>
         </div>

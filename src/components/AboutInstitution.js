@@ -4,8 +4,17 @@ export function renderAboutInstitution() {
   const inst = FEST_CONFIG.institution;
 
   return `
-    <section id="about" style="position: relative; z-index: 2; padding: 100px 0; overflow: hidden;">
-      <div class="container">
+    <section id="about" class="cyber-section-ambient" style="position: relative; z-index: 2; padding: 130px 0 80px; min-height: 100vh; overflow: hidden;">
+      
+      <!-- Background Cyber Objects & Ambience -->
+      <div class="cyber-bg-grid-mesh"></div>
+      <div class="cyber-bg-orb cyber-bg-orb-cyan" style="width: 500px; height: 500px; top: 10%; right: -100px;"></div>
+      <div class="cyber-bg-orb cyber-bg-orb-pink" style="width: 450px; height: 450px; bottom: 10%; left: -90px;"></div>
+      <div class="cyber-floating-ring" style="width: 380px; height: 380px; top: 15%; left: 5%;"></div>
+      <div class="cyber-floating-diamond" style="bottom: 20%; right: 6%;"></div>
+      <div class="cyber-watermark" style="top: 18%; left: 50%; transform: translateX(-50%); opacity: 0.035;">KNCET</div>
+
+      <div class="container" style="position: relative; z-index: 2;">
         
         <div class="cyber-panel cyber-hud-bracket cyber-popup-scale" style="padding: 50px 40px; background: linear-gradient(135deg, rgba(18, 9, 28, 0.85) 0%, rgba(9, 5, 14, 0.95) 100%); border-color: var(--border-glow);">
           
