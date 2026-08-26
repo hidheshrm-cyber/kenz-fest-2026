@@ -30,8 +30,8 @@
   --border-dark: rgba(255, 255, 255, 0.08);
 
   /* Typography */
-  --font-heading: 'Orbitron', 'Space Grotesk', 'Outfit', sans-serif;
-  --font-cyber: 'Orbitron', 'Rajdhani', sans-serif;
+  --font-heading: 'Alfa Slab One', 'Rokkitt', 'Orbitron', sans-serif;
+  --font-cyber: 'Orbitron', 'Rajdhani', 'Alfa Slab One', sans-serif;
   --font-body: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
