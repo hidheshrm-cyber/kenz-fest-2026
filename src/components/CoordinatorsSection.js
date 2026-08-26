@@ -15,13 +15,6 @@ export function renderCoordinatorsSection() {
       <div class="cyber-floating-diamond" style="top: 45%; left: 4%;"></div>
       <div class="cyber-watermark" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.035;">TEAM KEN'Z</div>
 
-      <!-- Story Character Animation Track for Team Section (Behind information cards) -->
-      <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 1;">
-        <div id="team-story-char" style="position: absolute; width: clamp(160px, 22vw, 260px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 40px rgba(255, 42, 133, 0.7));">
-          <img src="/assets/story_char_team.png" alt="KEN'Z FEST Mascot on Laptop" style="width: 100%; height: auto; display: block;">
-        </div>
-      </div>
-
       <div class="container" style="position: relative; z-index: 2; max-width: 1300px;">
         
         <!-- Section Header -->
@@ -330,102 +323,6 @@ export function renderCoordinatorsSection() {
       </div>
     </section>
   `;
-}
-
-let teamCharRafId = null;
-
-export function initTeamArenaCharacter() {
-  if (teamCharRafId) {
-    cancelAnimationFrame(teamCharRafId);
-    teamCharRafId = null;
-  }
-
-  const char = document.getElementById('team-story-char');
-  const section = document.getElementById('coordinators');
-  const level03 = document.querySelector('[data-team-level="level-03"]');
-  const level06 = document.querySelector('[data-team-level="level-06"]');
-
-  if (!char || !section || !level03 || !level06) return;
-
-  let targetX = 0;
-  let targetY = 0;
-  let targetRot = 0;
-  let currentX = null;
-  let currentY = null;
-  let currentRot = 0;
-  let isVisible = false;
-
-  function calculateTarget() {
-    // If level-03 or level-06 are hidden by partition filter, hide character
-    if (level03.style.display === 'none' || level06.style.display === 'none') {
-      isVisible = false;
-      char.style.opacity = '0';
-      return;
-    }
-
-    const l3Rect = level03.getBoundingClientRect();
-    const l6Rect = level06.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const sectionWidth = section.clientWidth;
-
-    // Viewport progress tracking:
-    // Starts when Mentor & Coordinators (Level 03) enters viewport
-    // Ends when Student Coordinators (Level 06) finishes
-    const totalDistance = (l6Rect.bottom - l3Rect.top) + windowHeight * 0.8;
-    const currentOffset = windowHeight * 0.8 - l3Rect.top;
-    let progress = currentOffset / totalDistance;
-    progress = Math.max(0, Math.min(1, progress));
-
-    // Visibility range
-    if (l3Rect.bottom < -150 || l6Rect.top > windowHeight + 150) {
-      isVisible = false;
-      char.style.opacity = '0';
-      return;
-    }
-
-    isVisible = true;
-    char.style.opacity = '0.98';
-
-    const charWidth = char.offsetWidth || 180;
-    const charHeight = char.offsetHeight || 270;
-
-    // Start Position: Completely Outside Top-Right frame starting at Mentor & Coordinators
-    const startX = sectionWidth + 40;
-    const startY = level03.offsetTop - charHeight * 0.5;
-
-    // End Position: Completely Outside Bottom-Left frame ending past Student Coordinators
-    const endX = -charWidth - 40;
-    const endY = level06.offsetTop + level06.offsetHeight + 40;
-
-    targetX = startX + progress * (endX - startX);
-    targetY = startY + progress * (endY - startY);
-    targetRot = -12 + progress * 24;
-
-    if (currentX === null || currentY === null) {
-      currentX = targetX;
-      currentY = targetY;
-      currentRot = targetRot;
-    }
-  }
-
-  function tick() {
-    if (isVisible && currentX !== null && currentY !== null) {
-      // Silky-smooth LERP inertia
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
-      currentRot += (targetRot - currentRot) * 0.08;
-
-      char.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
-    }
-
-    teamCharRafId = requestAnimationFrame(tick);
-  }
-
-  window.addEventListener('scroll', calculateTarget, { passive: true });
-  window.addEventListener('resize', calculateTarget, { passive: true });
-
-  calculateTarget();
-  tick();
 }
 
 export function initTeamFilter() {
