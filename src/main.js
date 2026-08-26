@@ -11,7 +11,7 @@ import { initCountdown } from './components/CountdownTimer.js';
 import { renderEventsShowcase, initEventArenaCharacter } from './components/EventsShowcase.js';
 import { renderEventModal } from './components/EventModal.js';
 import { renderMascotInspector360 } from './components/MascotInspector360.js';
-import { renderCoordinatorsSection } from './components/CoordinatorsSection.js';
+import { renderCoordinatorsSection, initTeamFilter } from './components/CoordinatorsSection.js';
 import { renderRegistrationPortal, initRegistrationPortal } from './components/RegistrationPortal.js';
 import { renderAboutInstitution } from './components/AboutInstitution.js';
 import { renderCampusTravelGuide } from './components/CampusTravelGuide.js';
@@ -83,6 +83,7 @@ function initApp() {
     try { setupEventFiltering(); } catch (e) {}
     try { setupEventModals(); } catch (e) {}
     try { initEventArenaCharacter(); } catch (e) {}
+    try { initTeamFilter(); } catch (e) {}
     
     if (scrollObserver) {
       scrollObserver.refresh();
