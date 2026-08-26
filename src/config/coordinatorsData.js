@@ -136,7 +136,7 @@ export const COORDINATORS_DATA = {
     },
     {
       id: "stu-3",
-      name: "Hidhesh",
+      name: "HIDHESH R M",
       role: "Student Coordinator",
       department: "Student Lead • KNCET"
     },
