@@ -4,7 +4,7 @@ export function renderCoordinatorsSection() {
   const { chiefPatrons, patrons, leadership, techGurus, projectAssistants, students } = COORDINATORS_DATA;
 
   return `
-    <section id="coordinators" class="cyber-section-ambient" style="padding: 130px 0 90px; min-height: 100vh; position: relative;">
+    <section id="coordinators" class="cyber-section-ambient" style="padding: 130px 0 90px; min-height: 100vh; position: relative; overflow: hidden;">
       
       <!-- Background Cyber Objects & Ambience -->
       <div class="cyber-bg-grid-mesh"></div>
@@ -14,6 +14,13 @@ export function renderCoordinatorsSection() {
       <div class="cyber-floating-ring" style="width: 450px; height: 450px; top: 10%; right: 4%;"></div>
       <div class="cyber-floating-diamond" style="top: 45%; left: 4%;"></div>
       <div class="cyber-watermark" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.035;">TEAM KEN'Z</div>
+
+      <!-- Story Character Animation Track for Team Section -->
+      <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 1;">
+        <div id="team-story-char" style="position: absolute; width: clamp(150px, 20vw, 240px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 30px rgba(255, 42, 133, 0.55));">
+          <img src="/assets/story_char_team.png" alt="KEN'Z FEST Mascot on Laptop" style="width: 100%; height: auto; display: block;">
+        </div>
+      </div>
 
       <div class="container" style="position: relative; z-index: 2; max-width: 1300px;">
         
@@ -323,6 +330,103 @@ export function renderCoordinatorsSection() {
       </div>
     </section>
   `;
+}
+
+let teamCharRafId = null;
+
+export function initTeamArenaCharacter() {
+  if (teamCharRafId) {
+    cancelAnimationFrame(teamCharRafId);
+    teamCharRafId = null;
+  }
+
+  const char = document.getElementById('team-story-char');
+  const section = document.getElementById('coordinators');
+  const level01 = document.querySelector('[data-team-level="level-01"]');
+  const level03 = document.querySelector('[data-team-level="level-03"]');
+
+  if (!char || !section || !level01 || !level03) return;
+
+  let targetX = 0;
+  let targetY = 0;
+  let targetRot = 0;
+  let currentX = null;
+  let currentY = null;
+  let currentRot = 0;
+  let isVisible = false;
+
+  function calculateTarget() {
+    // If level-01 or level-03 are hidden by partition filter, hide character
+    if (level01.style.display === 'none' || level03.style.display === 'none') {
+      isVisible = false;
+      char.style.opacity = '0';
+      return;
+    }
+
+    const l1Rect = level01.getBoundingClientRect();
+    const l3Rect = level03.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const sectionWidth = section.clientWidth;
+
+    // Viewport progress tracking across Level 01 to Level 03:
+    // Starts when Chief Patron (Level 01) arrives in viewport
+    // Ends when Mentor & Coordinators (Level 03) reaches bottom
+    const totalDistance = (l3Rect.bottom - l1Rect.top) || 1;
+    const currentOffset = windowHeight * 0.45 - l1Rect.top;
+    let progress = currentOffset / totalDistance;
+    progress = Math.max(0, Math.min(1, progress));
+
+    // Visibility range
+    if (l1Rect.bottom < -80 || l3Rect.top > windowHeight + 80) {
+      isVisible = false;
+      char.style.opacity = '0';
+      return;
+    }
+
+    isVisible = true;
+    char.style.opacity = '0.96';
+
+    const charWidth = char.offsetWidth || 180;
+    const charHeight = char.offsetHeight || 180;
+
+    // Start position (Level 01 Top-Right) -> End position (Level 03 Bottom-Left)
+    const startY = level01.offsetTop + 10;
+    const endY = level03.offsetTop + level03.offsetHeight - charHeight - 20;
+
+    // Start X (Top-Right): near right margin of container
+    const startX = Math.max(sectionWidth - charWidth - 50, sectionWidth * 0.72);
+    // End X (Bottom-Left): near left margin of container
+    const endX = 40;
+
+    targetX = startX + progress * (endX - startX);
+    targetY = startY + progress * (endY - startY);
+    targetRot = -8 + progress * 16;
+
+    if (currentX === null || currentY === null) {
+      currentX = targetX;
+      currentY = targetY;
+      currentRot = targetRot;
+    }
+  }
+
+  function tick() {
+    if (isVisible && currentX !== null && currentY !== null) {
+      // Silky-smooth LERP inertia
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      currentRot += (targetRot - currentRot) * 0.08;
+
+      char.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
+    }
+
+    teamCharRafId = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('scroll', calculateTarget, { passive: true });
+  window.addEventListener('resize', calculateTarget, { passive: true });
+
+  calculateTarget();
+  tick();
 }
 
 export function initTeamFilter() {
