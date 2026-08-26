@@ -15,9 +15,9 @@ export function renderCoordinatorsSection() {
       <div class="cyber-floating-diamond" style="top: 45%; left: 4%;"></div>
       <div class="cyber-watermark" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.035;">TEAM KEN'Z</div>
 
-      <!-- Story Character Animation Track for Team Section -->
-      <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 1;">
-        <div id="team-story-char" style="position: absolute; width: clamp(150px, 20vw, 240px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 30px rgba(255, 42, 133, 0.55));">
+      <!-- Story Character Animation Track for Team Section (Floats in front of cards) -->
+      <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 10;">
+        <div id="team-story-char" style="position: absolute; width: clamp(140px, 18vw, 220px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 35px rgba(255, 42, 133, 0.7));">
           <img src="/assets/story_char_team.png" alt="KEN'Z FEST Mascot on Laptop" style="width: 100%; height: auto; display: block;">
         </div>
       </div>
@@ -368,35 +368,37 @@ export function initTeamArenaCharacter() {
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
 
-    // Viewport progress tracking across Level 01 to Level 03:
-    // Starts when Chief Patron (Level 01) arrives in viewport
-    // Ends when Mentor & Coordinators (Level 03) reaches bottom
-    const totalDistance = (l3Rect.bottom - l1Rect.top) || 1;
-    const currentOffset = windowHeight * 0.45 - l1Rect.top;
+    // Viewport progress tracking:
+    // Starts when Chief Patron (Level 01) is entering from top
+    // Ends when Mentor & Coordinators (Level 03) finishes
+    const startScroll = windowHeight * 0.7;
+    const totalDistance = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.2;
+    const currentOffset = startScroll - l1Rect.top;
     let progress = currentOffset / totalDistance;
     progress = Math.max(0, Math.min(1, progress));
 
     // Visibility range
-    if (l1Rect.bottom < -80 || l3Rect.top > windowHeight + 80) {
+    if (l1Rect.bottom < -100 || l3Rect.top > windowHeight + 100) {
       isVisible = false;
       char.style.opacity = '0';
       return;
     }
 
     isVisible = true;
-    char.style.opacity = '0.96';
+    char.style.opacity = '0.98';
 
     const charWidth = char.offsetWidth || 180;
     const charHeight = char.offsetHeight || 180;
 
-    // Start position (Level 01 Top-Right) -> End position (Level 03 Bottom-Left)
-    const startY = level01.offsetTop + 10;
-    const endY = level03.offsetTop + level03.offsetHeight - charHeight - 20;
+    // Start position: Chief Patron (Level 01) Top-Right
+    const startY = level01.offsetTop - 10;
+    // End position: Mentor & Coordinators (Level 03) Bottom-Left
+    const endY = level03.offsetTop + level03.offsetHeight - charHeight;
 
-    // Start X (Top-Right): near right margin of container
-    const startX = Math.max(sectionWidth - charWidth - 50, sectionWidth * 0.72);
-    // End X (Bottom-Left): near left margin of container
-    const endX = 40;
+    // Start X (Top-Right): right edge inside section
+    const startX = Math.max(sectionWidth - charWidth - 30, sectionWidth * 0.72);
+    // End X (Bottom-Left): left edge inside section
+    const endX = 25;
 
     targetX = startX + progress * (endX - startX);
     targetY = startY + progress * (endY - startY);
