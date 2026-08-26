@@ -342,10 +342,10 @@ export function initTeamArenaCharacter() {
 
   const char = document.getElementById('team-story-char');
   const section = document.getElementById('coordinators');
-  const level01 = document.querySelector('[data-team-level="level-01"]');
   const level03 = document.querySelector('[data-team-level="level-03"]');
+  const level06 = document.querySelector('[data-team-level="level-06"]');
 
-  if (!char || !section || !level01 || !level03) return;
+  if (!char || !section || !level03 || !level06) return;
 
   let targetX = 0;
   let targetY = 0;
@@ -356,26 +356,28 @@ export function initTeamArenaCharacter() {
   let isVisible = false;
 
   function calculateTarget() {
-    // If level-01 or level-03 are hidden by partition filter, hide character
-    if (level01.style.display === 'none' || level03.style.display === 'none') {
+    // If level-03 or level-06 are hidden by partition filter, hide character
+    if (level03.style.display === 'none' || level06.style.display === 'none') {
       isVisible = false;
       char.style.opacity = '0';
       return;
     }
 
-    const l1Rect = level01.getBoundingClientRect();
     const l3Rect = level03.getBoundingClientRect();
+    const l6Rect = level06.getBoundingClientRect();
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
 
-    // Viewport progress tracking across Level 01 to Level 03:
-    const totalDistance = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.8;
-    const currentOffset = windowHeight * 0.8 - l1Rect.top;
+    // Viewport progress tracking:
+    // Starts when Mentor & Coordinators (Level 03) enters viewport
+    // Ends when Student Coordinators (Level 06) finishes
+    const totalDistance = (l6Rect.bottom - l3Rect.top) + windowHeight * 0.8;
+    const currentOffset = windowHeight * 0.8 - l3Rect.top;
     let progress = currentOffset / totalDistance;
     progress = Math.max(0, Math.min(1, progress));
 
     // Visibility range
-    if (l1Rect.bottom < -150 || l3Rect.top > windowHeight + 150) {
+    if (l3Rect.bottom < -150 || l6Rect.top > windowHeight + 150) {
       isVisible = false;
       char.style.opacity = '0';
       return;
@@ -384,16 +386,16 @@ export function initTeamArenaCharacter() {
     isVisible = true;
     char.style.opacity = '0.98';
 
-    const charWidth = char.offsetWidth || 220;
-    const charHeight = char.offsetHeight || 220;
+    const charWidth = char.offsetWidth || 180;
+    const charHeight = char.offsetHeight || 270;
 
-    // Start Position: Completely Outside Top-Right frame
+    // Start Position: Completely Outside Top-Right frame starting at Mentor & Coordinators
     const startX = sectionWidth + 40;
-    const startY = level01.offsetTop - charHeight * 0.6;
+    const startY = level03.offsetTop - charHeight * 0.5;
 
-    // End Position: Completely Outside Bottom-Left frame
+    // End Position: Completely Outside Bottom-Left frame ending past Student Coordinators
     const endX = -charWidth - 40;
-    const endY = level03.offsetTop + level03.offsetHeight + 40;
+    const endY = level06.offsetTop + level06.offsetHeight + 40;
 
     targetX = startX + progress * (endX - startX);
     targetY = startY + progress * (endY - startY);
