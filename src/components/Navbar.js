@@ -21,7 +21,7 @@ export function renderNavbar() {
         <div class="desktop-nav-links">
           <a href="#/" class="nav-link active">HOME</a>
           <a href="#/sponsors" class="nav-link">SPONSORS</a>
-          <a href="#/about" class="nav-link">ABOUT US</a>
+          <a href="#/team" class="nav-link">TEAM KEN'Z</a>
           <a href="#/institution" class="nav-link">INSTITUTION</a>
           <a href="#/location" class="nav-link">LOCATION</a>
           <a href="#/faq" class="nav-link">FAQ</a>
@@ -51,9 +51,9 @@ export function renderNavbar() {
             <span class="mobile-nav-idx">02</span>
             <span class="mobile-nav-text">SPONSORS</span>
           </a>
-          <a href="#/about" class="mobile-nav-link">
+          <a href="#/team" class="mobile-nav-link">
             <span class="mobile-nav-idx">03</span>
-            <span class="mobile-nav-text">ABOUT US</span>
+            <span class="mobile-nav-text">TEAM KEN'Z</span>
           </a>
           <a href="#/institution" class="mobile-nav-link">
             <span class="mobile-nav-idx">04</span>

@@ -40,7 +40,7 @@ export function renderCyberFooter() {
             <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--font-mono); font-size: 0.85rem;">
               <a href="#/" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 01. HOME PORTAL</a>
               <a href="#/sponsors" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 02. SPONSORS</a>
-              <a href="#/about" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 03. ABOUT US & TEAM</a>
+              <a href="#/team" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 03. TEAM KEN'Z</a>
               <a href="#/institution" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 04. HOST INSTITUTION</a>
               <a href="#/location" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 05. LOCATION & BUS ROUTES</a>
               <a href="#/faq" style="color: var(--text-secondary); text-decoration: none; transition: color 0.2s;">> 06. FAQ & SUPPORT</a>

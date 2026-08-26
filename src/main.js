@@ -61,7 +61,7 @@ function initApp() {
       `;
     } else if (hash === '#/events') {
       content = renderEventsShowcase();
-    } else if (hash === '#/about' || hash === '#/coordinators') {
+    } else if (hash === '#/team' || hash === '#/about' || hash === '#/coordinators') {
       content = renderCoordinatorsSection();
     } else if (hash === '#/institution') {
       content = renderAboutInstitution();
