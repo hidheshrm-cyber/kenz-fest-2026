@@ -301,13 +301,13 @@ export function renderCoordinatorsSection() {
               ${students.map(s => `
                 <div class="cyber-panel cyber-hud-bracket" style="padding: 22px; background: rgba(14, 8, 22, 0.85); border: 1px solid var(--border-glow); text-align: left;">
                   <div style="margin-bottom: 10px;">
-                    <span class="cyber-badge" style="font-size: 0.62rem; font-weight: 800; padding: 3px 8px;">STUDENT COORDINATOR</span>
+                    <span class="cyber-badge-cyan" style="font-size: 0.62rem; font-weight: 800; padding: 3px 8px;">STUDENT COORDINATOR</span>
                   </div>
                   
                   <h4 style="font-family: var(--font-heading); font-size: 1.15rem; color: #fff; font-weight: 800; margin-bottom: 6px;">
                     ${s.name}
                   </h4>
-                  <div style="font-size: 0.78rem; color: var(--neon-pink); font-weight: 600; margin-bottom: 4px;">
+                  <div style="font-size: 0.78rem; color: var(--neon-cyan); font-weight: 600; margin-bottom: 4px;">
                     ${s.role}
                   </div>
                   <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
