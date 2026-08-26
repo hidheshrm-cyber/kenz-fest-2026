@@ -30,9 +30,9 @@
   --border-dark: rgba(255, 255, 255, 0.08);
 
   /* Typography */
-  --font-heading: 'Syncopate', 'Orbitron', -apple-system, sans-serif;
-  --font-cyber: 'Orbitron', 'Syncopate', sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Orbitron', 'Space Grotesk', 'Outfit', sans-serif;
+  --font-cyber: 'Orbitron', 'Rajdhani', sans-serif;
+  --font-body: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* Layout & Spacing */
