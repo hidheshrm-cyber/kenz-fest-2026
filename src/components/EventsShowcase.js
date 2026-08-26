@@ -37,7 +37,7 @@ export function renderEventsShowcase() {
         <!-- Main Filter Tabs -->
         <div id="main-filter-tabs" style="display: flex; gap: 20px; justify-content: center; margin-bottom: 20px;" class="cyber-popup stagger-1">
           <button class="cyber-tab-btn main-tab-btn active" data-main-filter="all">ALL EVENTS</button>
-          <button class="cyber-tab-btn main-tab-btn" data-main-filter="upcoming">UPCOMING EVENTS</button>
+          <button class="cyber-tab-btn main-tab-btn" data-main-filter="upcoming">LIVE EVENTS</button>
         </div>
 
         <!-- Category Filter Tabs -->

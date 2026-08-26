@@ -28,7 +28,7 @@ export function renderScheduleTimeline() {
             EVENT TIMELINE
           </h2>
           <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
-            Explore upcoming festival track sessions and featured national workshops.
+            Explore live festival track sessions and featured national workshops.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export function renderScheduleTimeline() {
             MAIN TRACK SESSIONS
           </button>
           <button id="tab-day-2" class="btn-cyber-outline schedule-day-tab" data-day="2" style="padding: 12px 28px;">
-            UPCOMING EVENTS
+            LIVE EVENTS
           </button>
         </div>
 
@@ -58,7 +58,7 @@ export function renderScheduleTimeline() {
               <!-- Top Badge & Date Row -->
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
                 <span class="cyber-badge" style="font-size: 0.72rem; letter-spacing: 1px;">
-                  UPCOMING WORKSHOP
+                  LIVE WORKSHOP
                 </span>
                 <span class="cyber-badge-cyan" style="font-size: 0.78rem; font-weight: 800;">
                   28th & 29th AUGUST 2026
