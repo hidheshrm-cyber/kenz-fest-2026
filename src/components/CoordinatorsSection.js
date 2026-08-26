@@ -369,13 +369,13 @@ export function initTeamArenaCharacter() {
     const sectionWidth = section.clientWidth;
 
     // Viewport progress tracking across Level 01 to Level 03:
-    const totalDistance = Math.max(l3Rect.bottom - l1Rect.top + windowHeight * 0.3, 200);
-    const currentOffset = windowHeight * 0.65 - l1Rect.top;
+    const totalDistance = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.8;
+    const currentOffset = windowHeight * 0.8 - l1Rect.top;
     let progress = currentOffset / totalDistance;
     progress = Math.max(0, Math.min(1, progress));
 
     // Visibility range
-    if (l1Rect.bottom < -120 || l3Rect.top > windowHeight + 120) {
+    if (l1Rect.bottom < -150 || l3Rect.top > windowHeight + 150) {
       isVisible = false;
       char.style.opacity = '0';
       return;
@@ -384,20 +384,20 @@ export function initTeamArenaCharacter() {
     isVisible = true;
     char.style.opacity = '0.98';
 
-    const charWidth = char.offsetWidth || 200;
-    const charHeight = char.offsetHeight || 200;
+    const charWidth = char.offsetWidth || 220;
+    const charHeight = char.offsetHeight || 220;
 
-    // Start Position: Far Top-Right (near top of Level 01 / header)
-    const startX = sectionWidth - charWidth + 20;
-    const startY = Math.max(level01.offsetTop - 80, 20);
+    // Start Position: Completely Outside Top-Right frame
+    const startX = sectionWidth + 40;
+    const startY = level01.offsetTop - charHeight * 0.6;
 
-    // End Position: Far Bottom-Left (at bottom of Level 03)
-    const endX = -30;
-    const endY = level03.offsetTop + level03.offsetHeight - 40;
+    // End Position: Completely Outside Bottom-Left frame
+    const endX = -charWidth - 40;
+    const endY = level03.offsetTop + level03.offsetHeight + 40;
 
     targetX = startX + progress * (endX - startX);
     targetY = startY + progress * (endY - startY);
-    targetRot = -10 + progress * 20;
+    targetRot = -12 + progress * 24;
 
     if (currentX === null || currentY === null) {
       currentX = targetX;
