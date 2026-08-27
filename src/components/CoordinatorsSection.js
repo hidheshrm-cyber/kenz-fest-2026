@@ -354,13 +354,24 @@ export function initTeamArenaCharacter() {
   let isVisible = false;
 
   function calculateTarget() {
+    const level01 = document.querySelector('[data-team-level="level-01"]');
+    const level03 = document.querySelector('[data-team-level="level-03"]');
+
+    // If both levels are hidden by filter, hide character
+    if (level01 && level01.style.display === 'none' && level03 && level03.style.display === 'none') {
+      isVisible = false;
+      char.style.opacity = '0';
+      return;
+    }
+
     const rect = section.getBoundingClientRect();
+    const l1Rect = level01 ? level01.getBoundingClientRect() : rect;
+    const l3Rect = level03 ? level03.getBoundingClientRect() : rect;
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
-    const sectionHeight = section.offsetHeight;
 
-    // Check visibility with generous threshold
-    if (rect.bottom < 0 || rect.top > windowHeight) {
+    // Check visibility range (from entering Level 01 to exiting Level 03)
+    if (l1Rect.top > windowHeight || l3Rect.bottom < -120) {
       isVisible = false;
       char.style.opacity = '0';
       return;
@@ -369,27 +380,27 @@ export function initTeamArenaCharacter() {
     isVisible = true;
     char.style.opacity = '0.95';
 
-    // Calculate progress as user scrolls through the full height of the section
-    const totalTravel = sectionHeight + windowHeight;
-    const currentScrolled = windowHeight - rect.top;
-    let progress = currentScrolled / totalTravel;
+    // Progress: from entering Chief Patron (Level 01) to completing Mentor & Coordinators (Level 03)
+    const travelRange = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.6;
+    const currentScrolled = windowHeight * 0.7 - l1Rect.top;
+    let progress = currentScrolled / travelRange;
     progress = Math.max(0, Math.min(1, progress));
 
     const charWidth = char.offsetWidth || 180;
     const charHeight = char.offsetHeight || 260;
 
-    // Path: Out of Right-Top frame -> Across background behind cards -> Out of Left-Down frame
+    // Path: Starts out of frame at Right-Top -> Glides across background -> Full Left and OUT of frame at Mentor & Coordinators
     const startX = sectionWidth + 40;
-    const startY = -charHeight * 0.6;
+    const startY = level01 ? (level01.offsetTop - charHeight * 0.6) : -charHeight * 0.5;
 
-    const endX = -charWidth - 40;
-    const endY = sectionHeight + 40;
+    const endX = -charWidth - 50;
+    const endY = level03 ? (level03.offsetTop + level03.offsetHeight * 0.3) : (startY + 500);
 
     targetX = startX + progress * (endX - startX);
     targetY = startY + progress * (endY - startY);
 
-    // Subtle dynamic rotation as it travels down
-    targetRot = -14 + progress * 28;
+    // Subtle dynamic rotation as it travels down and exits left
+    targetRot = -14 + progress * 26;
 
     // Initialize current on first run
     if (currentX === null || currentY === null) {
