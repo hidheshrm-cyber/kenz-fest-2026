@@ -63,7 +63,7 @@ export function renderNavbar() {
             <span class="mobile-nav-idx">05</span>
             <span class="mobile-nav-text">LOCATION MAP</span>
           </a>
-          <a href="#/faq" class="mobile-nav-link text-gradient-cyan">
+          <a href="#/faq" class="mobile-nav-link">
             <span class="mobile-nav-idx">06</span>
             <span class="mobile-nav-text">FAQ</span>
           </a>
