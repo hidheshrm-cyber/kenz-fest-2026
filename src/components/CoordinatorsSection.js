@@ -373,76 +373,92 @@ export function initTeamArenaCharacter() {
 
     // --- CHARACTER 1 (Tiers 1 to 3: Right-Top -> Left-Down) ---
     if (char1) {
-      const l1Rect = level01 ? level01.getBoundingClientRect() : rect;
-      const l3Rect = level03 ? level03.getBoundingClientRect() : rect;
+      const activeL1 = (level01 && level01.style.display !== 'none') ? level01 : null;
+      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : (document.querySelector('[data-team-level="level-02"]') || activeL1);
 
-      if ((level01 && level01.style.display === 'none') && (level03 && level03.style.display === 'none')) {
-        isVisible1 = false;
-        char1.style.opacity = '0';
-      } else if (l1Rect.top > windowHeight || l3Rect.bottom < -120) {
+      if (!activeL1 && !activeL3) {
         isVisible1 = false;
         char1.style.opacity = '0';
       } else {
-        isVisible1 = true;
-        char1.style.opacity = '0.95';
+        const startElem1 = activeL1 || activeL3;
+        const endElem1 = activeL3 || activeL1;
+        const startRect1 = startElem1.getBoundingClientRect();
+        const endRect1 = endElem1.getBoundingClientRect();
 
-        const travelRange1 = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.6;
-        const currentScrolled1 = windowHeight * 0.7 - l1Rect.top;
-        let progress1 = Math.max(0, Math.min(1, currentScrolled1 / travelRange1));
+        if (startRect1.top > windowHeight + 80 || endRect1.bottom < -120) {
+          isVisible1 = false;
+          char1.style.opacity = '0';
+        } else {
+          isVisible1 = true;
+          char1.style.opacity = '0.98';
 
-        const charWidth1 = char1.offsetWidth || 180;
-        const startX1 = sectionWidth + 30;
-        const startY1 = level01 ? (level01.offsetTop + 20) : 80;
-        const endX1 = -charWidth1 - 40;
-        const endY1 = level03 ? (level03.offsetTop + level03.offsetHeight * 0.35) : (startY1 + 550);
+          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.6, 250);
+          const currentOffset1 = windowHeight * 0.75 - startRect1.top;
+          let progress1 = Math.max(0, Math.min(1, currentOffset1 / totalDistance1));
 
-        targetX1 = startX1 + progress1 * (endX1 - startX1);
-        targetY1 = startY1 + progress1 * (endY1 - startY1);
-        targetRot1 = -8 + progress1 * 16;
+          const charWidth1 = char1.offsetWidth || 180;
+          const startX1 = sectionWidth + 30;
+          const startY1 = startElem1.offsetTop + 15;
 
-        if (currentX1 === null || currentY1 === null) {
-          currentX1 = targetX1;
-          currentY1 = targetY1;
-          currentRot1 = targetRot1;
+          const endX1 = -charWidth1 - 40;
+          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.35;
+
+          targetX1 = startX1 + progress1 * (endX1 - startX1);
+          targetY1 = startY1 + progress1 * (endY1 - startY1);
+          targetRot1 = -8 + progress1 * 16;
+
+          if (currentX1 === null || currentY1 === null) {
+            currentX1 = targetX1;
+            currentY1 = targetY1;
+            currentRot1 = targetRot1;
+          }
         }
       }
     }
 
     // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
     if (char2) {
-      const l4Rect = level04 ? level04.getBoundingClientRect() : rect;
-      const l6Rect = level06 ? level06.getBoundingClientRect() : rect;
+      const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
+      const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : (document.querySelector('[data-team-level="level-05"]') || activeL4);
 
-      if ((level04 && level04.style.display === 'none') && (level06 && level06.style.display === 'none')) {
-        isVisible2 = false;
-        char2.style.opacity = '0';
-      } else if (l4Rect.top > windowHeight || l6Rect.bottom < -120) {
+      if (!activeL4 && !activeL6) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
-        isVisible2 = true;
-        char2.style.opacity = '0.95';
+        const startElem2 = activeL4 || activeL6;
+        const endElem2 = activeL6 || activeL4;
+        const startRect2 = startElem2.getBoundingClientRect();
+        const endRect2 = endElem2.getBoundingClientRect();
 
-        const travelRange2 = (l6Rect.bottom - l4Rect.top) + windowHeight * 0.6;
-        const currentScrolled2 = windowHeight * 0.7 - l4Rect.top;
-        let progress2 = Math.max(0, Math.min(1, currentScrolled2 / travelRange2));
+        if (startRect2.top > windowHeight + 80 || endRect2.bottom < -120) {
+          isVisible2 = false;
+          char2.style.opacity = '0';
+        } else {
+          isVisible2 = true;
+          char2.style.opacity = '0.98';
 
-        const charWidth2 = char2.offsetWidth || 180;
-        // Start: Out of frame Left-Top
-        const startX2 = -charWidth2 - 30;
-        const startY2 = level04 ? (level04.offsetTop + 20) : 800;
-        // End: Out of frame Right-Down
-        const endX2 = sectionWidth + 40;
-        const endY2 = level06 ? (level06.offsetTop + level06.offsetHeight + 20) : (startY2 + 650);
+          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.6, 250);
+          const currentOffset2 = windowHeight * 0.75 - startRect2.top;
+          let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
-        targetX2 = startX2 + progress2 * (endX2 - startX2);
-        targetY2 = startY2 + progress2 * (endY2 - startY2);
-        targetRot2 = 8 - progress2 * 16;
+          const charWidth2 = char2.offsetWidth || 180;
+          // Starts from out of frame on Left at Tech-Gurus (Level 04)
+          const startX2 = -charWidth2 - 30;
+          const startY2 = startElem2.offsetTop + 15;
 
-        if (currentX2 === null || currentY2 === null) {
-          currentX2 = targetX2;
-          currentY2 = targetY2;
-          currentRot2 = targetRot2;
+          // Ends out of frame on Right finishing at Student Coordinators (Level 06)
+          const endX2 = sectionWidth + 40;
+          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.4;
+
+          targetX2 = startX2 + progress2 * (endX2 - startX2);
+          targetY2 = startY2 + progress2 * (endY2 - startY2);
+          targetRot2 = 8 - progress2 * 16;
+
+          if (currentX2 === null || currentY2 === null) {
+            currentX2 = targetX2;
+            currentY2 = targetY2;
+            currentRot2 = targetRot2;
+          }
         }
       }
     }
