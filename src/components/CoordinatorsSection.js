@@ -15,6 +15,13 @@ export function renderCoordinatorsSection() {
       <div class="cyber-floating-diamond" style="top: 45%; left: 4%;"></div>
       <div class="cyber-watermark" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.035;">TEAM KEN'Z</div>
 
+      <!-- Story Character - Full Diagonal Background Travel Layer -->
+      <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 1;">
+        <div id="team-story-char" style="position: absolute; width: clamp(150px, 19vw, 240px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 30px rgba(255, 42, 133, 0.5));">
+          <img src="/assets/story_char_team.png" alt="Cyber Panther Scouting Mascot" style="width: 100%; height: auto; display: block;">
+        </div>
+      </div>
+
       <div class="container" style="position: relative; z-index: 2; max-width: 1300px;">
         
         <!-- Section Header -->
@@ -323,6 +330,93 @@ export function renderCoordinatorsSection() {
       </div>
     </section>
   `;
+}
+
+let teamCharRafId = null;
+
+export function initTeamArenaCharacter() {
+  if (teamCharRafId) {
+    cancelAnimationFrame(teamCharRafId);
+    teamCharRafId = null;
+  }
+
+  const char = document.getElementById('team-story-char');
+  const section = document.getElementById('coordinators');
+
+  if (!char || !section) return;
+
+  let targetX = 0;
+  let targetY = 0;
+  let targetRot = 0;
+  let currentX = null;
+  let currentY = null;
+  let currentRot = 0;
+  let isVisible = false;
+
+  function calculateTarget() {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const sectionWidth = section.clientWidth;
+    const sectionHeight = section.offsetHeight;
+
+    // Check visibility with generous threshold
+    if (rect.bottom < 0 || rect.top > windowHeight) {
+      isVisible = false;
+      char.style.opacity = '0';
+      return;
+    }
+
+    isVisible = true;
+    char.style.opacity = '0.95';
+
+    // Calculate progress as user scrolls through the full height of the section
+    const totalTravel = sectionHeight + windowHeight;
+    const currentScrolled = windowHeight - rect.top;
+    let progress = currentScrolled / totalTravel;
+    progress = Math.max(0, Math.min(1, progress));
+
+    const charWidth = char.offsetWidth || 180;
+    const charHeight = char.offsetHeight || 260;
+
+    // Path: Out of Right-Top frame -> Across background behind cards -> Out of Left-Down frame
+    const startX = sectionWidth + 40;
+    const startY = -charHeight * 0.6;
+
+    const endX = -charWidth - 40;
+    const endY = sectionHeight + 40;
+
+    targetX = startX + progress * (endX - startX);
+    targetY = startY + progress * (endY - startY);
+
+    // Subtle dynamic rotation as it travels down
+    targetRot = -14 + progress * 28;
+
+    // Initialize current on first run
+    if (currentX === null || currentY === null) {
+      currentX = targetX;
+      currentY = targetY;
+      currentRot = targetRot;
+    }
+  }
+
+  function tick() {
+    if (isVisible && currentX !== null && currentY !== null) {
+      // Smooth LERP interpolation
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      currentRot += (targetRot - currentRot) * 0.08;
+
+      char.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
+    }
+
+    teamCharRafId = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('scroll', calculateTarget, { passive: true });
+  window.addEventListener('resize', calculateTarget, { passive: true });
+
+  calculateTarget();
+  tick();
 }
 
 export function initTeamFilter() {
