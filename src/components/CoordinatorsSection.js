@@ -15,10 +15,15 @@ export function renderCoordinatorsSection() {
       <div class="cyber-floating-diamond" style="top: 45%; left: 4%;"></div>
       <div class="cyber-watermark" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.035;">TEAM KEN'Z</div>
 
-      <!-- Story Character - Full Diagonal Background Travel Layer -->
+      <!-- Story Characters - Background Travel Layers -->
       <div id="team-char-track" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 1;">
+        <!-- Character 1: Scouting Panther (Right-Top -> Left-Down) -->
         <div id="team-story-char" style="position: absolute; width: clamp(150px, 19vw, 240px); top: 0; left: 0; transform: translate3d(100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 30px rgba(255, 42, 133, 0.5));">
           <img src="/assets/story_char_team.png" alt="Cyber Panther Scouting Mascot" style="width: 100%; height: auto; display: block;">
+        </div>
+        <!-- Character 2: Coder Panther (Left-Top -> Right-Down) -->
+        <div id="team-story-char2" style="position: absolute; width: clamp(150px, 19vw, 240px); top: 0; left: 0; transform: translate3d(-100vw, -100px, 0); opacity: 0; transition: opacity 0.3s ease; will-change: transform; filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.55));">
+          <img src="/assets/story_char_team2.png" alt="Cyber Panther Coder Mascot" style="width: 100%; height: auto; display: block;">
         </div>
       </div>
 
@@ -340,84 +345,122 @@ export function initTeamArenaCharacter() {
     teamCharRafId = null;
   }
 
-  const char = document.getElementById('team-story-char');
+  const char1 = document.getElementById('team-story-char');
+  const char2 = document.getElementById('team-story-char2');
   const section = document.getElementById('coordinators');
 
-  if (!char || !section) return;
+  if (!section) return;
 
-  let targetX = 0;
-  let targetY = 0;
-  let targetRot = 0;
-  let currentX = null;
-  let currentY = null;
-  let currentRot = 0;
-  let isVisible = false;
+  // State for Character 1 (Scouting Panther: Right-Top -> Left-Down)
+  let targetX1 = 0, targetY1 = 0, targetRot1 = 0;
+  let currentX1 = null, currentY1 = null, currentRot1 = 0;
+  let isVisible1 = false;
+
+  // State for Character 2 (Coder Panther: Left-Top -> Right-Down)
+  let targetX2 = 0, targetY2 = 0, targetRot2 = 0;
+  let currentX2 = null, currentY2 = null, currentRot2 = 0;
+  let isVisible2 = false;
 
   function calculateTarget() {
     const level01 = document.querySelector('[data-team-level="level-01"]');
     const level03 = document.querySelector('[data-team-level="level-03"]');
-
-    // If both levels are hidden by filter, hide character
-    if (level01 && level01.style.display === 'none' && level03 && level03.style.display === 'none') {
-      isVisible = false;
-      char.style.opacity = '0';
-      return;
-    }
+    const level04 = document.querySelector('[data-team-level="level-04"]');
+    const level06 = document.querySelector('[data-team-level="level-06"]');
 
     const rect = section.getBoundingClientRect();
-    const l1Rect = level01 ? level01.getBoundingClientRect() : rect;
-    const l3Rect = level03 ? level03.getBoundingClientRect() : rect;
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
 
-    // Check visibility range (from entering Level 01 to exiting Level 03)
-    if (l1Rect.top > windowHeight || l3Rect.bottom < -120) {
-      isVisible = false;
-      char.style.opacity = '0';
-      return;
+    // --- CHARACTER 1 (Tiers 1 to 3: Right-Top -> Left-Down) ---
+    if (char1) {
+      const l1Rect = level01 ? level01.getBoundingClientRect() : rect;
+      const l3Rect = level03 ? level03.getBoundingClientRect() : rect;
+
+      if ((level01 && level01.style.display === 'none') && (level03 && level03.style.display === 'none')) {
+        isVisible1 = false;
+        char1.style.opacity = '0';
+      } else if (l1Rect.top > windowHeight || l3Rect.bottom < -120) {
+        isVisible1 = false;
+        char1.style.opacity = '0';
+      } else {
+        isVisible1 = true;
+        char1.style.opacity = '0.95';
+
+        const travelRange1 = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.6;
+        const currentScrolled1 = windowHeight * 0.7 - l1Rect.top;
+        let progress1 = Math.max(0, Math.min(1, currentScrolled1 / travelRange1));
+
+        const charWidth1 = char1.offsetWidth || 180;
+        const startX1 = sectionWidth + 30;
+        const startY1 = level01 ? (level01.offsetTop + 20) : 80;
+        const endX1 = -charWidth1 - 40;
+        const endY1 = level03 ? (level03.offsetTop + level03.offsetHeight * 0.35) : (startY1 + 550);
+
+        targetX1 = startX1 + progress1 * (endX1 - startX1);
+        targetY1 = startY1 + progress1 * (endY1 - startY1);
+        targetRot1 = -8 + progress1 * 16;
+
+        if (currentX1 === null || currentY1 === null) {
+          currentX1 = targetX1;
+          currentY1 = targetY1;
+          currentRot1 = targetRot1;
+        }
+      }
     }
 
-    isVisible = true;
-    char.style.opacity = '0.95';
+    // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
+    if (char2) {
+      const l4Rect = level04 ? level04.getBoundingClientRect() : rect;
+      const l6Rect = level06 ? level06.getBoundingClientRect() : rect;
 
-    // Progress: from entering Chief Patron (Level 01) to completing Mentor & Coordinators (Level 03)
-    const travelRange = (l3Rect.bottom - l1Rect.top) + windowHeight * 0.6;
-    const currentScrolled = windowHeight * 0.7 - l1Rect.top;
-    let progress = currentScrolled / travelRange;
-    progress = Math.max(0, Math.min(1, progress));
+      if ((level04 && level04.style.display === 'none') && (level06 && level06.style.display === 'none')) {
+        isVisible2 = false;
+        char2.style.opacity = '0';
+      } else if (l4Rect.top > windowHeight || l6Rect.bottom < -120) {
+        isVisible2 = false;
+        char2.style.opacity = '0';
+      } else {
+        isVisible2 = true;
+        char2.style.opacity = '0.95';
 
-    const charWidth = char.offsetWidth || 180;
-    const charHeight = char.offsetHeight || 260;
+        const travelRange2 = (l6Rect.bottom - l4Rect.top) + windowHeight * 0.6;
+        const currentScrolled2 = windowHeight * 0.7 - l4Rect.top;
+        let progress2 = Math.max(0, Math.min(1, currentScrolled2 / travelRange2));
 
-    // Path: Starts out of frame at Right (level with Chief Patron) -> Glides through center -> Exits out of frame on Left at Mentor & Coordinators
-    const startX = sectionWidth + 30;
-    const startY = level01 ? (level01.offsetTop + 20) : 80;
+        const charWidth2 = char2.offsetWidth || 180;
+        // Start: Out of frame Left-Top
+        const startX2 = -charWidth2 - 30;
+        const startY2 = level04 ? (level04.offsetTop + 20) : 800;
+        // End: Out of frame Right-Down
+        const endX2 = sectionWidth + 40;
+        const endY2 = level06 ? (level06.offsetTop + level06.offsetHeight + 20) : (startY2 + 650);
 
-    const endX = -charWidth - 40;
-    const endY = level03 ? (level03.offsetTop + level03.offsetHeight * 0.35) : (startY + 550);
+        targetX2 = startX2 + progress2 * (endX2 - startX2);
+        targetY2 = startY2 + progress2 * (endY2 - startY2);
+        targetRot2 = 8 - progress2 * 16;
 
-    targetX = startX + progress * (endX - startX);
-    targetY = startY + progress * (endY - startY);
-
-    // Subtle dynamic rotation as it glides down and exits left
-    targetRot = -8 + progress * 16;
-
-    // Initialize current on first run
-    if (currentX === null || currentY === null) {
-      currentX = targetX;
-      currentY = targetY;
-      currentRot = targetRot;
+        if (currentX2 === null || currentY2 === null) {
+          currentX2 = targetX2;
+          currentY2 = targetY2;
+          currentRot2 = targetRot2;
+        }
+      }
     }
   }
 
   function tick() {
-    if (isVisible && currentX !== null && currentY !== null) {
-      // Smooth LERP interpolation
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
-      currentRot += (targetRot - currentRot) * 0.08;
+    if (char1 && isVisible1 && currentX1 !== null && currentY1 !== null) {
+      currentX1 += (targetX1 - currentX1) * 0.08;
+      currentY1 += (targetY1 - currentY1) * 0.08;
+      currentRot1 += (targetRot1 - currentRot1) * 0.08;
+      char1.style.transform = `translate3d(${currentX1.toFixed(2)}px, ${currentY1.toFixed(2)}px, 0) rotate(${currentRot1.toFixed(2)}deg)`;
+    }
 
-      char.style.transform = `translate3d(${currentX.toFixed(2)}px, ${currentY.toFixed(2)}px, 0) rotate(${currentRot.toFixed(2)}deg)`;
+    if (char2 && isVisible2 && currentX2 !== null && currentY2 !== null) {
+      currentX2 += (targetX2 - currentX2) * 0.08;
+      currentY2 += (targetY2 - currentY2) * 0.08;
+      currentRot2 += (targetRot2 - currentRot2) * 0.08;
+      char2.style.transform = `translate3d(${currentX2.toFixed(2)}px, ${currentY2.toFixed(2)}px, 0) rotate(${currentRot2.toFixed(2)}deg)`;
     }
 
     teamCharRafId = requestAnimationFrame(tick);
