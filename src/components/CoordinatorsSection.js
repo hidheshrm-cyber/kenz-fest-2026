@@ -371,29 +371,29 @@ export function initTeamArenaCharacter() {
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
 
-    // --- CHARACTER 1 (Tiers 1 to 3: Right-Top -> Left-Down) ---
+    // --- CHARACTER 1 (Tiers 1 to 4: Right-Top -> Left-Down) ---
     if (char1) {
       const activeL1 = (level01 && level01.style.display !== 'none') ? level01 : null;
-      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : (document.querySelector('[data-team-level="level-02"]') || activeL1);
+      const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : (document.querySelector('[data-team-level="level-03"]') || activeL1);
 
-      if (!activeL1 && !activeL3) {
+      if (!activeL1 && !activeL4) {
         isVisible1 = false;
         char1.style.opacity = '0';
       } else {
-        const startElem1 = activeL1 || activeL3;
-        const endElem1 = activeL3 || activeL1;
+        const startElem1 = activeL1 || activeL4;
+        const endElem1 = activeL4 || activeL1;
         const startRect1 = startElem1.getBoundingClientRect();
         const endRect1 = endElem1.getBoundingClientRect();
 
-        // Finishes and disappears completely as Mentor & Coordinators exits the mid-screen
-        if (startRect1.top > windowHeight + 40 || endRect1.bottom < windowHeight * 0.4) {
+        // Disappears cleanly as Tech-Gurus passes before Project Assistants
+        if (startRect1.top > windowHeight + 40 || endRect1.bottom < windowHeight * 0.35) {
           isVisible1 = false;
           char1.style.opacity = '0';
         } else {
           isVisible1 = true;
           char1.style.opacity = '0.98';
 
-          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.35, 200);
+          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.4, 200);
           const currentOffset1 = windowHeight * 0.65 - startRect1.top;
           let progress1 = Math.max(0, Math.min(1, currentOffset1 / totalDistance1));
 
@@ -402,7 +402,7 @@ export function initTeamArenaCharacter() {
           const startY1 = startElem1.offsetTop + 15;
 
           const endX1 = -charWidth1 - 50;
-          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.3;
+          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.35;
 
           targetX1 = startX1 + progress1 * (endX1 - startX1);
           targetY1 = startY1 + progress1 * (endY1 - startY1);
@@ -417,45 +417,53 @@ export function initTeamArenaCharacter() {
       }
     }
 
-    // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
-    // Starts strictly AFTER Character 1 has fully disappeared and ends right after Aradhana
+    // --- CHARACTER 2 (Starts from PROJECT ASSISTANTS -> Ends while reaching ARADHANA) ---
     if (char2) {
-      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : null;
-      const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
-      const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : (document.querySelector('[data-team-level="level-05"]') || activeL4);
+      const level05 = document.querySelector('[data-team-level="level-05"]');
+      const activeL5 = (level05 && level05.style.display !== 'none') ? level05 : null;
+      const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : activeL5;
 
-      // Character 1 MUST be 100% gone before Character 2 can show
-      const isChar1FullyGone = !activeL3 || (activeL3.getBoundingClientRect().bottom < windowHeight * 0.35);
-
-      if (!isChar1FullyGone || (!activeL4 && !activeL6)) {
+      if (!activeL5 && !activeL6) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
-        const startElem2 = activeL4 || activeL6;
-        const endElem2 = activeL6 || activeL4;
+        const startElem2 = activeL5 || activeL6;
         const startRect2 = startElem2.getBoundingClientRect();
-        const endRect2 = endElem2.getBoundingClientRect();
 
-        // Starts at Tech-Gurus and ends right at student coordinators after Aradhana
-        if (startRect2.top > windowHeight * 0.7 || endRect2.bottom < -80) {
+        // Calculate Aradhana's vertical target in Student Coordinators (Level 06)
+        let aradhanaY = startElem2.offsetTop + 400;
+        let aradhanaRectBottom = startRect2.bottom + 400;
+
+        if (activeL6) {
+          const studentCards = activeL6.querySelectorAll('.cyber-panel');
+          studentCards.forEach(card => {
+            if (card.textContent.toLowerCase().includes('aradhana')) {
+              aradhanaY = activeL6.offsetTop + card.offsetTop + card.offsetHeight * 0.5;
+              aradhanaRectBottom = card.getBoundingClientRect().bottom;
+            }
+          });
+        }
+
+        // Starts when Project Assistants enters view, disappears once past Aradhana
+        if (startRect2.top > windowHeight * 0.8 || aradhanaRectBottom < windowHeight * 0.25) {
           isVisible2 = false;
           char2.style.opacity = '0';
         } else {
           isVisible2 = true;
           char2.style.opacity = '0.98';
 
-          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.4, 250);
-          const currentOffset2 = windowHeight * 0.7 - startRect2.top;
+          const totalDistance2 = Math.max(aradhanaRectBottom - startRect2.top + windowHeight * 0.4, 250);
+          const currentOffset2 = windowHeight * 0.75 - startRect2.top;
           let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
           const charWidth2 = char2.offsetWidth || 180;
-          // Starts from out of frame on Left at Tech-Gurus (Level 04)
+          // Starts from out of frame on Left at PROJECT ASSISTANTS (Level 05)
           const startX2 = -charWidth2 - 30;
           const startY2 = startElem2.offsetTop + 15;
 
-          // Ends out of frame on Right after Aradhana in Student Coordinators (Level 06)
+          // Ends out of frame on Right at ARADHANA in Student Coordinators (Level 06)
           const endX2 = sectionWidth + 40;
-          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.65;
+          const endY2 = aradhanaY;
 
           targetX2 = startX2 + progress2 * (endX2 - startX2);
           targetY2 = startY2 + progress2 * (endY2 - startY2);
