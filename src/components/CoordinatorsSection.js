@@ -371,29 +371,31 @@ export function initTeamArenaCharacter() {
     const windowHeight = window.innerHeight;
     const sectionWidth = section.clientWidth;
 
-    // --- CHARACTER 1 (Tiers 1 to 4: Right-Top -> Left-Down) ---
+    // --- CHARACTER 1 (Tiers 1 to 3: Right-Top -> Left-Down, finishes before Tech-Gurus) ---
     if (char1) {
       const activeL1 = (level01 && level01.style.display !== 'none') ? level01 : null;
-      const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : (document.querySelector('[data-team-level="level-03"]') || activeL1);
+      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : (document.querySelector('[data-team-level="level-02"]') || activeL1);
+      const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
 
-      if (!activeL1 && !activeL4) {
+      if (!activeL1 && !activeL3) {
         isVisible1 = false;
         char1.style.opacity = '0';
       } else {
-        const startElem1 = activeL1 || activeL4;
-        const endElem1 = activeL4 || activeL1;
+        const startElem1 = activeL1 || activeL3;
+        const endElem1 = activeL3 || activeL1;
         const startRect1 = startElem1.getBoundingClientRect();
         const endRect1 = endElem1.getBoundingClientRect();
+        const l4Top = activeL4 ? activeL4.getBoundingClientRect().top : 9999;
 
-        // Disappears cleanly as Tech-Gurus passes before Project Assistants
-        if (startRect1.top > windowHeight + 40 || endRect1.bottom < windowHeight * 0.35) {
+        // Disappears completely before starting of Tech-Gurus (Level 04)
+        if (startRect1.top > windowHeight + 40 || endRect1.bottom < windowHeight * 0.45 || l4Top < windowHeight * 0.9) {
           isVisible1 = false;
           char1.style.opacity = '0';
         } else {
           isVisible1 = true;
           char1.style.opacity = '0.98';
 
-          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.4, 200);
+          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.3, 200);
           const currentOffset1 = windowHeight * 0.65 - startRect1.top;
           let progress1 = Math.max(0, Math.min(1, currentOffset1 / totalDistance1));
 
@@ -401,8 +403,9 @@ export function initTeamArenaCharacter() {
           const startX1 = sectionWidth + 30;
           const startY1 = startElem1.offsetTop + 15;
 
+          // Exits full left at Mentor & Coordinators
           const endX1 = -charWidth1 - 50;
-          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.35;
+          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.25;
 
           targetX1 = startX1 + progress1 * (endX1 - startX1);
           targetY1 = startY1 + progress1 * (endY1 - startY1);
