@@ -418,16 +418,11 @@ export function initTeamArenaCharacter() {
     }
 
     // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
-    // Starts ONLY after Character 1 has finished exiting Mentor & Coordinators
     if (char2) {
-      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : null;
       const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
       const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : (document.querySelector('[data-team-level="level-05"]') || activeL4);
 
-      // If Level 3 is still in the upper half of the screen, Char 2 waits
-      const isChar1StillActive = activeL3 && (activeL3.getBoundingClientRect().bottom > windowHeight * 0.3);
-
-      if (isChar1StillActive || (!activeL4 && !activeL6)) {
+      if (!activeL4 && !activeL6) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
@@ -436,29 +431,29 @@ export function initTeamArenaCharacter() {
         const startRect2 = startElem2.getBoundingClientRect();
         const endRect2 = endElem2.getBoundingClientRect();
 
-        if (startRect2.top > windowHeight * 0.75 || endRect2.bottom < -120) {
+        if (startRect2.top > windowHeight + 60 || endRect2.bottom < -120) {
           isVisible2 = false;
           char2.style.opacity = '0';
         } else {
           isVisible2 = true;
           char2.style.opacity = '0.98';
 
-          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.5, 250);
-          const currentOffset2 = windowHeight * 0.7 - startRect2.top;
+          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.6, 250);
+          const currentOffset2 = windowHeight * 0.75 - startRect2.top;
           let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
           const charWidth2 = char2.offsetWidth || 180;
           // Starts from out of frame on Left at Tech-Gurus (Level 04)
           const startX2 = -charWidth2 - 30;
-          const startY2 = startElem2.offsetTop + 15;
+          const startY2 = startElem2.offsetTop + 20;
 
-          // Ends out of frame on Right finishing at Student Coordinators (Level 06)
+          // Ends out of frame on Right finishing past Student Coordinators (Level 06)
           const endX2 = sectionWidth + 40;
-          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.4;
+          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.35;
 
           targetX2 = startX2 + progress2 * (endX2 - startX2);
           targetY2 = startY2 + progress2 * (endY2 - startY2);
-          targetRot2 = 8 - progress2 * 16;
+          targetRot2 = 6 - progress2 * 14;
 
           if (currentX2 === null || currentY2 === null) {
             currentX2 = targetX2;
