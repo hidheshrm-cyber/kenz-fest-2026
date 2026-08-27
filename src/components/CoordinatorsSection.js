@@ -389,18 +389,18 @@ export function initTeamArenaCharacter() {
     const charWidth = char.offsetWidth || 180;
     const charHeight = char.offsetHeight || 260;
 
-    // Path: Starts out of frame at Right-Top -> Glides across background -> Full Left and OUT of frame at Mentor & Coordinators
-    const startX = sectionWidth + 40;
-    const startY = level01 ? (level01.offsetTop - charHeight * 0.6) : -charHeight * 0.5;
+    // Path: Starts out of frame at Right (level with Chief Patron) -> Glides through center -> Exits out of frame on Left at Mentor & Coordinators
+    const startX = sectionWidth + 30;
+    const startY = level01 ? (level01.offsetTop + 20) : 80;
 
-    const endX = -charWidth - 50;
-    const endY = level03 ? (level03.offsetTop + level03.offsetHeight * 0.3) : (startY + 500);
+    const endX = -charWidth - 40;
+    const endY = level03 ? (level03.offsetTop + level03.offsetHeight * 0.35) : (startY + 550);
 
     targetX = startX + progress * (endX - startX);
     targetY = startY + progress * (endY - startY);
 
-    // Subtle dynamic rotation as it travels down and exits left
-    targetRot = -14 + progress * 26;
+    // Subtle dynamic rotation as it glides down and exits left
+    targetRot = -8 + progress * 16;
 
     // Initialize current on first run
     if (currentX === null || currentY === null) {
