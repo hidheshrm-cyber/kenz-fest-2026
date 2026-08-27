@@ -385,24 +385,24 @@ export function initTeamArenaCharacter() {
         const startRect1 = startElem1.getBoundingClientRect();
         const endRect1 = endElem1.getBoundingClientRect();
 
-        // Disappears cleanly as Mentor & Coordinators finishes
-        if (startRect1.top > windowHeight || endRect1.bottom < windowHeight * 0.15) {
+        // Finishes and disappears completely as Mentor & Coordinators exits the mid-screen
+        if (startRect1.top > windowHeight + 40 || endRect1.bottom < windowHeight * 0.4) {
           isVisible1 = false;
           char1.style.opacity = '0';
         } else {
           isVisible1 = true;
           char1.style.opacity = '0.98';
 
-          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.5, 250);
-          const currentOffset1 = windowHeight * 0.7 - startRect1.top;
+          const totalDistance1 = Math.max(endRect1.bottom - startRect1.top + windowHeight * 0.35, 200);
+          const currentOffset1 = windowHeight * 0.65 - startRect1.top;
           let progress1 = Math.max(0, Math.min(1, currentOffset1 / totalDistance1));
 
           const charWidth1 = char1.offsetWidth || 180;
           const startX1 = sectionWidth + 30;
           const startY1 = startElem1.offsetTop + 15;
 
-          const endX1 = -charWidth1 - 40;
-          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.35;
+          const endX1 = -charWidth1 - 50;
+          const endY1 = endElem1.offsetTop + endElem1.offsetHeight * 0.3;
 
           targetX1 = startX1 + progress1 * (endX1 - startX1);
           targetY1 = startY1 + progress1 * (endY1 - startY1);
@@ -418,16 +418,16 @@ export function initTeamArenaCharacter() {
     }
 
     // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
-    // Starts strictly after Character 1 disappears at Mentor & Coordinators, travels through the very end of Student Coordinators
+    // Starts strictly AFTER Character 1 has fully disappeared and ends right after Aradhana
     if (char2) {
       const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : null;
       const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
       const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : (document.querySelector('[data-team-level="level-05"]') || activeL4);
 
-      // Char 2 only begins once Level 3 has finished (or if viewing filtered Tier 4-6 directly)
-      const isChar1Done = !activeL3 || (activeL3.getBoundingClientRect().bottom <= windowHeight * 0.45);
+      // Character 1 MUST be 100% gone before Character 2 can show
+      const isChar1FullyGone = !activeL3 || (activeL3.getBoundingClientRect().bottom < windowHeight * 0.35);
 
-      if (!isChar1Done || (!activeL4 && !activeL6)) {
+      if (!isChar1FullyGone || (!activeL4 && !activeL6)) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
@@ -436,16 +436,16 @@ export function initTeamArenaCharacter() {
         const startRect2 = startElem2.getBoundingClientRect();
         const endRect2 = endElem2.getBoundingClientRect();
 
-        // Active from Tech-Gurus all the way to the end of Student Coordinators
-        if (startRect2.top > windowHeight * 0.85 || endRect2.bottom < -100) {
+        // Starts at Tech-Gurus and ends right at student coordinators after Aradhana
+        if (startRect2.top > windowHeight * 0.7 || endRect2.bottom < -80) {
           isVisible2 = false;
           char2.style.opacity = '0';
         } else {
           isVisible2 = true;
           char2.style.opacity = '0.98';
 
-          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.6, 300);
-          const currentOffset2 = windowHeight * 0.8 - startRect2.top;
+          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.4, 250);
+          const currentOffset2 = windowHeight * 0.7 - startRect2.top;
           let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
           const charWidth2 = char2.offsetWidth || 180;
@@ -453,9 +453,9 @@ export function initTeamArenaCharacter() {
           const startX2 = -charWidth2 - 30;
           const startY2 = startElem2.offsetTop + 15;
 
-          // Ends out of frame on Right at the very end of Student Coordinators (Level 06)
+          // Ends out of frame on Right after Aradhana in Student Coordinators (Level 06)
           const endX2 = sectionWidth + 40;
-          const endY2 = endElem2.offsetTop + endElem2.offsetHeight - 40;
+          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.65;
 
           targetX2 = startX2 + progress2 * (endX2 - startX2);
           targetY2 = startY2 + progress2 * (endY2 - startY2);
