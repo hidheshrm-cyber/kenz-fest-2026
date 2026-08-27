@@ -417,51 +417,46 @@ export function initTeamArenaCharacter() {
       }
     }
 
-    // --- CHARACTER 2 (Starts from PROJECT ASSISTANTS -> Ends while reaching ARADHANA) ---
+    // --- CHARACTER 2 (Starts from STUDENT COORDINATORS / ADITHYA SAJOSH -> Ends at ARADHANA) ---
     if (char2) {
-      const level05 = document.querySelector('[data-team-level="level-05"]');
-      const activeL5 = (level05 && level05.style.display !== 'none') ? level05 : null;
-      const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : activeL5;
+      const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : null;
 
-      if (!activeL5 && !activeL6) {
+      if (!activeL6) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
-        const startElem2 = activeL5 || activeL6;
-        const startRect2 = startElem2.getBoundingClientRect();
+        const startRect2 = activeL6.getBoundingClientRect();
 
-        // Calculate Aradhana's vertical target in Student Coordinators (Level 06)
-        let aradhanaY = startElem2.offsetTop + 400;
-        let aradhanaRectBottom = startRect2.bottom + 400;
+        // Calculate Aradhana's vertical target inside Student Coordinators
+        let aradhanaY = activeL6.offsetTop + activeL6.offsetHeight * 0.6;
+        let aradhanaRectBottom = startRect2.bottom;
 
-        if (activeL6) {
-          const studentCards = activeL6.querySelectorAll('.cyber-panel');
-          studentCards.forEach(card => {
-            if (card.textContent.toLowerCase().includes('aradhana')) {
-              aradhanaY = activeL6.offsetTop + card.offsetTop + card.offsetHeight * 0.5;
-              aradhanaRectBottom = card.getBoundingClientRect().bottom;
-            }
-          });
-        }
+        const studentCards = activeL6.querySelectorAll('.cyber-panel');
+        studentCards.forEach(card => {
+          if (card.textContent.toLowerCase().includes('aradhana')) {
+            aradhanaY = activeL6.offsetTop + card.offsetTop + card.offsetHeight * 0.5;
+            aradhanaRectBottom = card.getBoundingClientRect().bottom;
+          }
+        });
 
-        // Starts when Project Assistants enters view, disappears once past Aradhana
-        if (startRect2.top > windowHeight * 0.8 || aradhanaRectBottom < windowHeight * 0.25) {
+        // Starts strictly when STUDENT COORDINATORS enters view, disappears once past Aradhana
+        if (startRect2.top > windowHeight * 0.75 || aradhanaRectBottom < windowHeight * 0.2) {
           isVisible2 = false;
           char2.style.opacity = '0';
         } else {
           isVisible2 = true;
           char2.style.opacity = '0.98';
 
-          const totalDistance2 = Math.max(aradhanaRectBottom - startRect2.top + windowHeight * 0.4, 250);
-          const currentOffset2 = windowHeight * 0.75 - startRect2.top;
+          const totalDistance2 = Math.max(aradhanaRectBottom - startRect2.top + windowHeight * 0.35, 200);
+          const currentOffset2 = windowHeight * 0.68 - startRect2.top;
           let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
           const charWidth2 = char2.offsetWidth || 180;
-          // Starts from out of frame on Left at PROJECT ASSISTANTS (Level 05)
+          // Starts from out of frame on Left at STUDENT COORDINATORS / ADITHYA SAJOSH (Level 06)
           const startX2 = -charWidth2 - 30;
-          const startY2 = startElem2.offsetTop + 15;
+          const startY2 = activeL6.offsetTop + 15;
 
-          // Ends out of frame on Right at ARADHANA in Student Coordinators (Level 06)
+          // Ends out of frame on Right at ARADHANA in Student Coordinators
           const endX2 = sectionWidth + 40;
           const endY2 = aradhanaY;
 
