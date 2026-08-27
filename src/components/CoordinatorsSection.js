@@ -385,8 +385,8 @@ export function initTeamArenaCharacter() {
         const startRect1 = startElem1.getBoundingClientRect();
         const endRect1 = endElem1.getBoundingClientRect();
 
-        // Finishes and disappears as Mentor & Coordinators passes
-        if (startRect1.top > windowHeight + 80 || endRect1.bottom < windowHeight * 0.2) {
+        // Disappears cleanly as Mentor & Coordinators finishes
+        if (startRect1.top > windowHeight || endRect1.bottom < windowHeight * 0.15) {
           isVisible1 = false;
           char1.style.opacity = '0';
         } else {
@@ -418,11 +418,16 @@ export function initTeamArenaCharacter() {
     }
 
     // --- CHARACTER 2 (Tiers 4 to 6: Left-Top -> Right-Down) ---
+    // Starts strictly after Character 1 disappears at Mentor & Coordinators, travels through the very end of Student Coordinators
     if (char2) {
+      const activeL3 = (level03 && level03.style.display !== 'none') ? level03 : null;
       const activeL4 = (level04 && level04.style.display !== 'none') ? level04 : null;
       const activeL6 = (level06 && level06.style.display !== 'none') ? level06 : (document.querySelector('[data-team-level="level-05"]') || activeL4);
 
-      if (!activeL4 && !activeL6) {
+      // Char 2 only begins once Level 3 has finished (or if viewing filtered Tier 4-6 directly)
+      const isChar1Done = !activeL3 || (activeL3.getBoundingClientRect().bottom <= windowHeight * 0.45);
+
+      if (!isChar1Done || (!activeL4 && !activeL6)) {
         isVisible2 = false;
         char2.style.opacity = '0';
       } else {
@@ -431,25 +436,26 @@ export function initTeamArenaCharacter() {
         const startRect2 = startElem2.getBoundingClientRect();
         const endRect2 = endElem2.getBoundingClientRect();
 
-        if (startRect2.top > windowHeight + 60 || endRect2.bottom < -120) {
+        // Active from Tech-Gurus all the way to the end of Student Coordinators
+        if (startRect2.top > windowHeight * 0.85 || endRect2.bottom < -100) {
           isVisible2 = false;
           char2.style.opacity = '0';
         } else {
           isVisible2 = true;
           char2.style.opacity = '0.98';
 
-          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.6, 250);
-          const currentOffset2 = windowHeight * 0.75 - startRect2.top;
+          const totalDistance2 = Math.max(endRect2.bottom - startRect2.top + windowHeight * 0.6, 300);
+          const currentOffset2 = windowHeight * 0.8 - startRect2.top;
           let progress2 = Math.max(0, Math.min(1, currentOffset2 / totalDistance2));
 
           const charWidth2 = char2.offsetWidth || 180;
           // Starts from out of frame on Left at Tech-Gurus (Level 04)
           const startX2 = -charWidth2 - 30;
-          const startY2 = startElem2.offsetTop + 20;
+          const startY2 = startElem2.offsetTop + 15;
 
-          // Ends out of frame on Right finishing past Student Coordinators (Level 06)
+          // Ends out of frame on Right at the very end of Student Coordinators (Level 06)
           const endX2 = sectionWidth + 40;
-          const endY2 = endElem2.offsetTop + endElem2.offsetHeight * 0.35;
+          const endY2 = endElem2.offsetTop + endElem2.offsetHeight - 40;
 
           targetX2 = startX2 + progress2 * (endX2 - startX2);
           targetY2 = startY2 + progress2 * (endY2 - startY2);
